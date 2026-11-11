@@ -1,0 +1,78 @@
+@using BACKEND_PROJEKT.Models
+@model List<Product>
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<div class="breadcrumb-area bg-img" data-bg="/assets/img/banner/breadcrumb-banner.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-wrap text-center">
+                    <nav aria-label="breadcrumb">
+                        <h1 class="breadcrumb-title">Search Results</h1>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Search: @ViewBag.SearchQuery</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="shop-main-wrapper section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title text-center mb-4">
+                    <h3 class="title">Results for: "@ViewBag.SearchQuery"</h3>
+                    <p>Found @Model.Count items</p>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="alert alert-warning text-center">
+                        <p>No products found matching your search.</p>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-hero mt-3">Back to Store</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        @foreach (var product in Model)
+                        {
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                <div class="product-item">
+                                    <div class="product-thumb">
+                                        <a href="#">
+                                            <img src="~/assets/img/product/@product.Image" alt="@product.Name" />
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-caption">
+                                            <h6 class="product-name">
+                                                <a href="#">@product.Name</a>
+                                            </h6>
+                                            <div class="price-box">
+                                                <span class="price-regular">$@product.Price.ToString("0.00")</span>
+                                                @if (product.OldPrice.HasValue)
+                                                {
+                                                    <span class="price-old"><del>$@product.OldPrice.Value.ToString("0.00")</del></span>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="product-action-link mt-2">
+                                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@product.Id" class="btn btn-hero btn-sm">ADD TO CART</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

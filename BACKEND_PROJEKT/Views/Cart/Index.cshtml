@@ -1,0 +1,115 @@
+@using BACKEND_PROJEKT.ViewModels
+@model List<BasketItemVM>
+@{
+    ViewData["Title"] = "Cart";
+    decimal subtotal = Model?.Sum(x => x.Price * x.Count) ?? 0;
+}
+
+<div class="breadcrumb-area bg-img" data-bg="/assets/img/banner/breadcrumb-banner.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-wrap text-center">
+                    <nav aria-label="breadcrumb">
+                        <h1 class="breadcrumb-title">Cart</h1>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Cart</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cart-main-wrapper section-padding">
+    <div class="container">
+        <div class="section-bg-color">
+            <div class="row">
+                <div class="col-lg-12">
+                    @if (Model == null || !Model.Any())
+                    {
+                        <div class="alert alert-info text-center py-5">
+                            <h3>Your Cart is empty!</h3>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-hero mt-3">Continue Shopping</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="cart-table table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="pro-thumbnail">Thumbnail</th>
+                                        <th class="pro-title">Product</th>
+                                        <th class="pro-price">Price</th>
+                                        <th class="pro-quantity">Quantity</th>
+                                        <th class="pro-subtotal">Total</th>
+                                        <th class="pro-remove">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="pro-thumbnail">
+                                                <a href="#"><img class="img-fluid" src="~/assets/img/product/@item.Image" alt="@item.Name" /></a>
+                                            </td>
+                                            <td class="pro-title"><a href="#">@item.Name</a></td>
+                                            <td class="pro-price"><span>$@item.Price.ToString("0.00")</span></td>
+                                            <td class="pro-quantity">
+                                                <div class="d-flex justify-content-center align-items-center">
+                                                    <a asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary me-2">-</a>
+                                                    <span class="mx-2 fw-bold">@item.Count</span>
+                                                    <a asp-controller="Cart" asp-action="Increase" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary ms-2">+</a>
+                                                </div>
+                                            </td>
+                                            <td class="pro-subtotal"><span>$@((item.Price * item.Count).ToString("0.00"))</span></td>
+                                            <td class="pro-remove">
+                                                <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Id"><i class="fa fa-trash-o"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="cart-update-option d-block d-md-flex justify-content-between">
+                            <div class="cart-update">
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-sqr">Continue Shopping</a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-5 ml-auto">
+                                <div class="cart-calculator-wrapper">
+                                    <div class="cart-calculate-items">
+                                        <h3>Cart Totals</h3>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tr>
+                                                    <td>Sub Total</td>
+                                                    <td>$@subtotal.ToString("0.00")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Shipping</td>
+                                                    <td>Free</td>
+                                                </tr>
+                                                <tr class="total">
+                                                    <td>Total</td>
+                                                    <td class="total-amount">$@subtotal.ToString("0.00")</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="btn btn-sqr d-block">Proceed Checkout</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
